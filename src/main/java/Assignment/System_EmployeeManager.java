@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 public class System_EmployeeManager extends javax.swing.JFrame {
 
     private EmployeeManager_Interface emi;
+    private int index;
 
     /**
      * Creates new form System_EmployeeManager
@@ -81,7 +82,7 @@ public class System_EmployeeManager extends javax.swing.JFrame {
         btnBack2 = new javax.swing.JButton();
         btnStep1 = new javax.swing.JButton();
         btnStep2 = new javax.swing.JButton();
-        jLabel8 = new javax.swing.JLabel();
+        lbRecord = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -250,9 +251,9 @@ public class System_EmployeeManager extends javax.swing.JFrame {
             }
         });
 
-        jLabel8.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 102, 51));
-        jLabel8.setText("Record: 1 of 10");
+        lbRecord.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
+        lbRecord.setForeground(new java.awt.Color(255, 102, 51));
+        lbRecord.setText("Record: 0 of 0");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -268,7 +269,7 @@ public class System_EmployeeManager extends javax.swing.JFrame {
                 .addGap(5, 5, 5)
                 .addComponent(btnStep1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel8)
+                .addComponent(lbRecord)
                 .addGap(11, 11, 11))
         );
         jPanel4Layout.setVerticalGroup(
@@ -280,7 +281,7 @@ public class System_EmployeeManager extends javax.swing.JFrame {
                     .addComponent(btnStep2)
                     .addComponent(btnBack2)
                     .addComponent(btnBack)
-                    .addComponent(jLabel8))
+                    .addComponent(lbRecord))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -426,21 +427,28 @@ public class System_EmployeeManager extends javax.swing.JFrame {
         } else {
             if (iD.matches(formID)) {
                 if (email.matches(formEmail)) {
-                    int ageInt = Integer.parseInt(age);
-                    Double salaryDouble = Double.parseDouble(salary);
-                    if (salaryDouble > 5000000) {
-                        if (listEmployee.isEmpty() == true || !employee.getId().equals(iD)) {
-                            employee = new Employee(iD, name, ageInt, email, salaryDouble);
-                            emi.add(employee);
-                            this.reSet();
-                            this.showTable();
-                            JOptionPane.showMessageDialog(this, "Lưu thành công");
+                    try {
+                        int ageInt = Integer.parseInt(age);
+                        Double salaryDouble = Double.parseDouble(salary);
+                        if (salaryDouble > 5000000) {
+                            if (listEmployee.isEmpty() == true || !employee.getId().equals(iD)) {
+                                employee = new Employee(iD, name, ageInt, email, salaryDouble);
+                                emi.add(employee);
+                                this.reSet();
+                                this.showTable();
+                                this.updateRecord();
+                                JOptionPane.showMessageDialog(this, "Lưu thành công");
+                            } else {
+                                JOptionPane.showMessageDialog(this, "Bạn đã nhập trùng mã nhân viên, Vui lòng nhập lại!");
+                            }
                         } else {
-                            JOptionPane.showMessageDialog(this, "Bạn đã nhập trùng mã nhân viên, Vui lòng nhập lại!");
+                            JOptionPane.showMessageDialog(this, "Lương phải trên 5 triệu!");
                         }
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Lương phải trên 5 triệu!");
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "Định dang lương nhập vào bị sai!");
                     }
+
                 } else {
                     JOptionPane.showMessageDialog(this, "Email phải đúng định dạng !");
                 }
@@ -467,21 +475,22 @@ public class System_EmployeeManager extends javax.swing.JFrame {
 
         }
     }//GEN-LAST:event_btnExitActionPerformed
-    private int index;
+
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        this.index = 0;
-        this.showDetail();
+        index = 0;
 
+        this.showDetail();
+        this.updateRecord();
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnBack2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBack2ActionPerformed
         // TODO add your handling code here:
-
-        if (this.index > 0) {
-            this.index--;
+        if (index > 0) {
+            index--;
             this.showDetail();
+            this.updateRecord();
         }
     }//GEN-LAST:event_btnBack2ActionPerformed
 
@@ -489,9 +498,10 @@ public class System_EmployeeManager extends javax.swing.JFrame {
         // TODO add your handling code here:
         List<Employee> listEmployee = this.emi.getList();
 
-        if (this.index < listEmployee.size() - 1) {
-            this.index++;
+        if (index < listEmployee.size() - 1) {
+            index++;
             this.showDetail();
+            this.updateRecord();
         }
     }//GEN-LAST:event_btnStep2ActionPerformed
 
@@ -499,8 +509,9 @@ public class System_EmployeeManager extends javax.swing.JFrame {
         // TODO add your handling code here:
 
         List<Employee> listEmployee = this.emi.getList();
-        this.index = listEmployee.size() - 1;
+        index = listEmployee.size() - 1;
         this.showDetail();
+        this.updateRecord();
     }//GEN-LAST:event_btnStep1ActionPerformed
 
     private void txtIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIDActionPerformed
@@ -509,7 +520,22 @@ public class System_EmployeeManager extends javax.swing.JFrame {
 
     private void tblEmployeeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEmployeeMouseClicked
         // TODO add your handling code here:
-        this.showDetail();
+        int row = this.tblEmployee.getSelectedRow();
+        if (row == -1) {
+            return;
+        }
+        String iD = this.tblEmployee.getValueAt(row, 0).toString();
+        String name = this.tblEmployee.getValueAt(row, 1).toString();
+        int age = Integer.parseInt(this.tblEmployee.getValueAt(row, 2).toString());
+        String email = this.tblEmployee.getValueAt(row, 3).toString();
+        String salary = this.tblEmployee.getValueAt(row, 4).toString();
+
+        this.txtID.setText(iD);
+        this.txtName.setText(name);
+        this.cbbAge.setSelectedItem(age);
+        this.txtEmail.setText(email);
+        this.txtSalary.setText(salary);
+        lbRecord.setText("Record: " + (row + 1) + " of " + this.emi.getList().size());
     }//GEN-LAST:event_tblEmployeeMouseClicked
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
@@ -524,6 +550,7 @@ public class System_EmployeeManager extends javax.swing.JFrame {
             this.emi.delete(row);
             this.showTable();
             this.reSet();
+            this.updateRecord();
         } else if (confirm == JOptionPane.NO_OPTION) {
 
         } else if (confirm == JOptionPane.CANCEL_OPTION) {
@@ -550,23 +577,18 @@ public class System_EmployeeManager extends javax.swing.JFrame {
         }
     }
 
+    public void updateRecord() {
+        lbRecord.setText("Record: " + (this.index + 1) + " of " + this.emi.getList().size());
+    }
+
     public void showDetail() {
-        int row = this.tblEmployee.getSelectedRow();
-
-        if (row == -1) {
-            return;
-        }
-        String iD = this.tblEmployee.getValueAt(row, 0).toString();
-        String name = this.tblEmployee.getValueAt(row, 1).toString();
-        int age = Integer.parseInt(this.tblEmployee.getValueAt(row, 2).toString());
-        String email = this.tblEmployee.getValueAt(row, 3).toString();
-        String salary = this.tblEmployee.getValueAt(row, 4).toString();
-
-        this.txtID.setText(iD);
-        this.txtName.setText(name);
-        this.cbbAge.setSelectedItem(age);
-        this.txtEmail.setText(email);
-        this.txtSalary.setText(salary);
+        Employee employee = this.emi.get(index);
+        this.txtID.setText(employee.getId());
+        this.txtName.setText(employee.getName());
+        this.cbbAge.setSelectedItem(employee.getAge());
+        this.txtEmail.setText(employee.getEmail());
+        this.txtSalary.setText(employee.getSalary().toString());
+        this.tblEmployee.setRowSelectionInterval(index, index);
     }
 
     public void reSet() {
@@ -631,7 +653,6 @@ public class System_EmployeeManager extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -639,6 +660,7 @@ public class System_EmployeeManager extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTextField5;
+    private javax.swing.JLabel lbRecord;
     private javax.swing.JLabel lbTime;
     private javax.swing.JTable tblEmployee;
     private javax.swing.JTextField txtEmail;
