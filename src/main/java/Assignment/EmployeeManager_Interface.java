@@ -24,4 +24,8 @@ public interface EmployeeManager_Interface {
     public Employee get(int position);
 
     public List<Employee> getList();
+
+    public void writeFile(String fileName);
+
+    public void readFile(String fileName);
 }

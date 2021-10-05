@@ -5,6 +5,7 @@
  */
 package Assignment;
 
+import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +20,7 @@ public class System_EmployeeManager extends javax.swing.JFrame {
 
     private EmployeeManager_Interface emi;
     private int index;
+    private String fileName = "EmployeeList.txt";
 
     /**
      * Creates new form System_EmployeeManager
@@ -136,6 +138,11 @@ public class System_EmployeeManager extends javax.swing.JFrame {
         });
 
         btnOpen.setText("Open");
+        btnOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOpenActionPerformed(evt);
+            }
+        });
 
         btnExit.setText("Exit");
         btnExit.addActionListener(new java.awt.event.ActionListener() {
@@ -422,9 +429,8 @@ public class System_EmployeeManager extends javax.swing.JFrame {
             employee = listEmployee.get(i);
         }
 
-        if (iD.length() == 0 && name.length() == 0 && email.length() == 0 && salary.length() == 0) {
-            JOptionPane.showMessageDialog(this, "Bạn chưa nhập dữ liệu vào, Vui lòng mời nhập đầy đủ!");
-        } else {
+        if (iD.length() != 0 && name.length() != 0 && email.length() != 0 && salary.length() != 0) {
+
             if (iD.matches(formID)) {
                 if (email.matches(formEmail)) {
                     try {
@@ -433,11 +439,13 @@ public class System_EmployeeManager extends javax.swing.JFrame {
                         if (salaryDouble > 5000000) {
                             if (listEmployee.isEmpty() == true || !employee.getId().equals(iD)) {
                                 employee = new Employee(iD, name, ageInt, email, salaryDouble);
-                                emi.add(employee);
+                                this.emi.add(employee);
                                 this.reSet();
                                 this.showTable();
                                 this.updateRecord();
-                                JOptionPane.showMessageDialog(this, "Lưu thành công");
+                                this.emi.writeFile(this.fileName);
+                                this.txtSalary.setBackground(Color.white);
+                                JOptionPane.showMessageDialog(this, "Lưu thành công, Ghi vào file thành công");
                             } else {
                                 JOptionPane.showMessageDialog(this, "Bạn đã nhập trùng mã nhân viên, Vui lòng nhập lại!");
                             }
@@ -446,6 +454,7 @@ public class System_EmployeeManager extends javax.swing.JFrame {
                         }
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
+                        this.txtSalary.setBackground(Color.yellow);
                         JOptionPane.showMessageDialog(this, "Định dang lương nhập vào bị sai!");
                     }
 
@@ -455,6 +464,9 @@ public class System_EmployeeManager extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(this, "Mã nhân viên phải đúng định dạng!");
             }
+        } else {
+            JOptionPane.showMessageDialog(this, "Bạn chưa nhập dữ liệu vào, Vui lòng mời nhập đầy đủ!");
+
         }
 
     }//GEN-LAST:event_btnSaveActionPerformed
@@ -468,6 +480,7 @@ public class System_EmployeeManager extends javax.swing.JFrame {
         int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn thoát chương chình này không ?");
         System.out.println(confirm);
         if (confirm == JOptionPane.YES_OPTION) {
+            this.emi.writeFile(fileName);
             System.exit(0);
         } else if (confirm == JOptionPane.NO_OPTION) {
 
@@ -480,7 +493,6 @@ public class System_EmployeeManager extends javax.swing.JFrame {
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
         index = 0;
-
         this.showDetail();
         this.updateRecord();
     }//GEN-LAST:event_btnBackActionPerformed
@@ -542,14 +554,16 @@ public class System_EmployeeManager extends javax.swing.JFrame {
         // TODO add your handling code here:
         int row = this.tblEmployee.getSelectedRow();
         if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn bên dưới bảng để xoá!");
             return;
         }
-        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn xoá bạn ghi này không ?");
+        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn xoá bản ghi này không ?");
         System.out.println(confirm);
         if (confirm == JOptionPane.YES_OPTION) {
             this.emi.delete(row);
             this.showTable();
             this.reSet();
+            this.emi.writeFile(fileName);
             this.updateRecord();
         } else if (confirm == JOptionPane.NO_OPTION) {
 
@@ -557,6 +571,20 @@ public class System_EmployeeManager extends javax.swing.JFrame {
 
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenActionPerformed
+        // TODO add your handling code here:
+        this.emi.readFile(fileName);
+        this.showTable();
+        if (this.emi.getList().isEmpty() != true) {
+            index = 0;
+            this.showDetail();
+            this.updateRecord();
+            JOptionPane.showMessageDialog(this, "Mở file thành công!");
+        }else{
+            JOptionPane.showMessageDialog(this, "Mở file thành công, Nhưng trong file trống!");
+        }
+    }//GEN-LAST:event_btnOpenActionPerformed
     public void showTable() {
         DefaultTableModel dtm = (DefaultTableModel) this.tblEmployee.getModel();
 
