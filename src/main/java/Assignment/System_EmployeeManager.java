@@ -473,6 +473,30 @@ public class System_EmployeeManager extends javax.swing.JFrame {
 
     private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
         // TODO add your handling code here:
+
+        String input = JOptionPane.showInputDialog(null, "Nhập mã nhân viên để tìm kiếm", "Tìm kiếm", JOptionPane.INFORMATION_MESSAGE);
+        if (input != null) {
+            List<Employee> listEmployee = this.emi.getList();
+
+            if (!listEmployee.isEmpty()) {
+                for (int i = 0; i < listEmployee.size(); i++) {
+                    Employee employee = listEmployee.get(i);
+                    if (employee.getId().equals(input)) {
+                        this.index = i;
+                        this.showTable();
+                        this.showDetail();
+                        this.updateRecord();
+                        JOptionPane.showMessageDialog(this, "Tìm thành công nhân viên, Vui lòng kiểm tra trên form");
+                    }
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Chưa có dữ liệu nào, vui lòng thêm vào để tìm kiếm");
+            }
+        } else {
+
+        }
+
     }//GEN-LAST:event_btnFindActionPerformed
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
@@ -538,7 +562,7 @@ public class System_EmployeeManager extends javax.swing.JFrame {
         }
         String iD = this.tblEmployee.getValueAt(row, 0).toString();
         String name = this.tblEmployee.getValueAt(row, 1).toString();
-        int age = Integer.parseInt(this.tblEmployee.getValueAt(row, 2).toString());
+        String age = this.tblEmployee.getValueAt(row, 2).toString();
         String email = this.tblEmployee.getValueAt(row, 3).toString();
         String salary = this.tblEmployee.getValueAt(row, 4).toString();
 
@@ -581,7 +605,7 @@ public class System_EmployeeManager extends javax.swing.JFrame {
             this.showDetail();
             this.updateRecord();
             JOptionPane.showMessageDialog(this, "Mở file thành công!");
-        }else{
+        } else {
             JOptionPane.showMessageDialog(this, "Mở file thành công, Nhưng trong file trống!");
         }
     }//GEN-LAST:event_btnOpenActionPerformed
