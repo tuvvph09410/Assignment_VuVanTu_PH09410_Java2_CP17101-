@@ -28,4 +28,13 @@ public interface EmployeeManager_Interface {
     public void writeFile(String fileName);
 
     public void readFile(String fileName);
+
+    public boolean checkID(String id);
+
+    public void arrangeName();
+
+    public void arrangeID();
+
+    public void arrangeSalary();
+
 }

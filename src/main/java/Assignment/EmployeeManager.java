@@ -12,9 +12,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -98,4 +98,55 @@ public class EmployeeManager implements EmployeeManager_Interface {
 
     }
 
+    @Override
+    public boolean checkID(String id) {
+        try {
+            for (int i = 0; i < getList().size(); i++) {
+                Employee employee = getList().get(i);
+                if (employee.getId().equals(id)) {
+                    return true;
+                }
+            }
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public void arrangeName() {
+        Comparator<Employee> comparator = new Comparator<Employee>() {
+            @Override
+            public int compare(Employee o1, Employee o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+
+        };
+        Collections.sort(getList(), comparator);
+    }
+
+    @Override
+    public void arrangeID() {
+        Comparator<Employee> comparator = new Comparator<Employee>() {
+            @Override
+            public int compare(Employee o1, Employee o2) {
+                return o1.getId().compareTo(o2.getId());
+            }
+        };
+        Collections.sort(getList(), comparator);
+    }
+
+    @Override
+    public void arrangeSalary() {
+        Comparator<Employee> comparator = new Comparator<Employee>() {
+            @Override
+            public int compare(Employee o1, Employee o2) {
+                Double d1 = o1.getSalary();
+                Double d2 = o2.getSalary();
+                return d1.compareTo(d2);
+            }
+        };
+        Collections.sort(getList(), comparator);
+    }
 }
