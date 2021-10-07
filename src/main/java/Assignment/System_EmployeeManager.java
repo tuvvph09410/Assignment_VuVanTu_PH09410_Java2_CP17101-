@@ -479,48 +479,75 @@ public class System_EmployeeManager extends javax.swing.JFrame {
         String salary = this.txtSalary.getText();
 
         List<Employee> listEmployee = emi.getList();
+        int row = this.tblEmployee.getSelectedRow();
+        if (row == -1) {
+            if (iD.length() != 0 && name.length() != 0 && email.length() != 0 && salary.length() != 0) {
 
-        if (iD.length() != 0 && name.length() != 0 && email.length() != 0 && salary.length() != 0) {
-
-            if (iD.matches(formID)) {
-                if (email.matches(formEmail)) {
-                    try {
-                        int ageInt = Integer.parseInt(age);
-                        Double salaryDouble = Double.parseDouble(salary);
-                        if (salaryDouble > 5000000) {
-                            if (listEmployee.isEmpty() == true || this.emi.checkID(iD) == false) {
-                                Employee employee = new Employee(iD, name, ageInt, email, salaryDouble);
-                                this.emi.add(employee);
-                                this.reSet();
-                                this.showTable();
-                                this.emi.writeFile(this.fileName);
-                                this.txtSalary.setBackground(Color.white);
-                                index = listEmployee.size() - 1;
-                                this.tblEmployee.setRowSelectionInterval(index, index);
-                                lbRecord.setText("Record: " + (this.emi.getList().size()) + " of " + this.emi.getList().size());
-                                JOptionPane.showMessageDialog(this, "Lưu thành công, Ghi vào file thành công");
+                if (iD.matches(formID)) {
+                    if (email.matches(formEmail)) {
+                        try {
+                            int ageInt = Integer.parseInt(age);
+                            Double salaryDouble = Double.parseDouble(salary);
+                            if (salaryDouble > 5000000) {
+                                if (listEmployee.isEmpty() == true || this.emi.checkID(iD) == false) {
+                                    Employee employee = new Employee(iD, name, ageInt, email, salaryDouble);
+                                    this.emi.add(employee);
+                                    this.reSet();
+                                    this.showTable();
+                                    this.emi.writeFile(this.fileName);
+                                    this.txtSalary.setBackground(Color.white);
+                                    index = listEmployee.size() - 1;
+                                    this.tblEmployee.setRowSelectionInterval(index, index);
+                                    lbRecord.setText("Record: " + (this.emi.getList().size()) + " of " + this.emi.getList().size());
+                                    JOptionPane.showMessageDialog(this, "Lưu thành công, Ghi vào file thành công");
+                                } else {
+                                    JOptionPane.showMessageDialog(this, "Bạn đã nhập trùng mã nhân viên, Vui lòng nhập lại!");
+                                }
                             } else {
-                                JOptionPane.showMessageDialog(this, "Bạn đã nhập trùng mã nhân viên, Vui lòng nhập lại!");
+                                JOptionPane.showMessageDialog(this, "Lương phải trên 5 triệu!");
                             }
-                        } else {
-                            JOptionPane.showMessageDialog(this, "Lương phải trên 5 triệu!");
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                            this.txtSalary.setBackground(Color.yellow);
+                            JOptionPane.showMessageDialog(this, "Định dang lương nhập vào bị sai!");
                         }
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                        this.txtSalary.setBackground(Color.yellow);
-                        JOptionPane.showMessageDialog(this, "Định dang lương nhập vào bị sai!");
-                    }
 
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Email phải đúng định dạng !");
+                    }
                 } else {
-                    JOptionPane.showMessageDialog(this, "Email phải đúng định dạng !");
+                    JOptionPane.showMessageDialog(this, "Mã nhân viên phải đúng định dạng!");
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "Mã nhân viên phải đúng định dạng!");
+                JOptionPane.showMessageDialog(this, "Bạn chưa nhập dữ liệu vào, Vui lòng mời nhập đầy đủ!");
+
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Bạn chưa nhập dữ liệu vào, Vui lòng mời nhập đầy đủ!");
+        } else if (row != -1) {
+            try {
+                int ageInt = Integer.parseInt(age);
+                Double salaryDouble = Double.parseDouble(salary);
+                if (salaryDouble > 5000000) {
+                    Employee employee = new Employee(iD, name, ageInt, email, salaryDouble);
+                    this.emi.update(row, employee);
+                    this.reSet();
+                    this.showTable();
+                    this.emi.writeFile(this.fileName);
+                    this.txtSalary.setBackground(Color.white);
+                    this.tblEmployee.setRowSelectionInterval(row, row);
+                    lbRecord.setText("Record: " + (row + 1) + " of " + this.emi.getList().size());
+                    JOptionPane.showMessageDialog(this, "Cập nhật thành công, Ghi vào file thành công");
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Lương phải trên 5 triệu!");
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                this.txtSalary.setBackground(Color.yellow);
+                JOptionPane.showMessageDialog(this, "Định dang lương nhập vào bị sai!");
+            }
 
         }
+
 
     }//GEN-LAST:event_btnSaveActionPerformed
 
@@ -669,14 +696,14 @@ public class System_EmployeeManager extends javax.swing.JFrame {
 
     private void btnArrangeIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArrangeIDActionPerformed
         // TODO add your handling code here:
-       
+
         this.emi.arrangeID();
         this.showTable();
     }//GEN-LAST:event_btnArrangeIDActionPerformed
 
     private void btnArrangeNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArrangeNameActionPerformed
         // TODO add your handling code here:
-       ;
+        ;
         this.emi.arrangeName();
         this.showTable();
     }//GEN-LAST:event_btnArrangeNameActionPerformed
