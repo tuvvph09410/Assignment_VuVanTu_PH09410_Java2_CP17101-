@@ -61,43 +61,6 @@ public class EmployeeManager implements EmployeeManager_Interface {
     public List<Employee> getList() {
         return this.listEmployee;
     }
-
-    @Override
-    public void writeFile(String fileName) {
-        try {
-            FileOutputStream fos = new FileOutputStream(fileName);
-            ObjectOutputStream objectOS = new ObjectOutputStream(fos);
-
-            objectOS.writeObject(getList());
-
-            objectOS.close();
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-    }
-
-    @Override
-    public void readFile(String fileName) {
-        try {
-            FileInputStream fis = new FileInputStream(fileName);
-            ObjectInputStream ObjectIS = new ObjectInputStream(fis);
-
-            this.listEmployee = (List<Employee>) ObjectIS.readObject();
-
-            ObjectIS.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-        }
-
-    }
-
     @Override
     public boolean checkID(String id) {
         try {

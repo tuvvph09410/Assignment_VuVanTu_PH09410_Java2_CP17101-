@@ -25,10 +25,6 @@ public interface EmployeeManager_Interface {
 
     public List<Employee> getList();
 
-    public void writeFile(String fileName);
-
-    public void readFile(String fileName);
-
     public boolean checkID(String id);
 
     public void arrangeName();

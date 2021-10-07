@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import XFile.XFile;
 
 /**
  *
@@ -20,7 +21,7 @@ public class System_EmployeeManager extends javax.swing.JFrame {
 
     private EmployeeManager_Interface emi;
     private int index;
-    private String fileName = "EmployeeList.txt";
+    private String path = "EmployeeList.txt";
 
     /**
      * Creates new form System_EmployeeManager
@@ -494,10 +495,10 @@ public class System_EmployeeManager extends javax.swing.JFrame {
                                     this.emi.add(employee);
                                     this.reSet();
                                     this.showTable();
-                                    this.emi.writeFile(this.fileName);
+                                    XFile.writeFile(path, this.emi.getList());
                                     this.txtSalary.setBackground(Color.white);
-                                    index = listEmployee.size() - 1;
-                                    this.tblEmployee.setRowSelectionInterval(index, index);
+//                                    index = listEmployee.size() - 1;
+//                                    this.tblEmployee.setRowSelectionInterval(index, index);
                                     lbRecord.setText("Record: " + (this.emi.getList().size()) + " of " + this.emi.getList().size());
                                     JOptionPane.showMessageDialog(this, "Lưu thành công, Ghi vào file thành công");
                                 } else {
@@ -522,7 +523,8 @@ public class System_EmployeeManager extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Bạn chưa nhập dữ liệu vào, Vui lòng mời nhập đầy đủ!");
 
             }
-        } else if (row != -1) {
+    }//GEN-LAST:event_btnSaveActionPerformed
+    else {
             try {
                 int ageInt = Integer.parseInt(age);
                 Double salaryDouble = Double.parseDouble(salary);
@@ -531,10 +533,11 @@ public class System_EmployeeManager extends javax.swing.JFrame {
                     this.emi.update(row, employee);
                     this.reSet();
                     this.showTable();
-                    this.emi.writeFile(this.fileName);
+                    XFile.writeFile(path, this.emi.getList());
                     this.txtSalary.setBackground(Color.white);
                     this.tblEmployee.setRowSelectionInterval(row, row);
                     lbRecord.setText("Record: " + (row + 1) + " of " + this.emi.getList().size());
+                    this.tblEmployee.clearSelection();
                     JOptionPane.showMessageDialog(this, "Cập nhật thành công, Ghi vào file thành công");
 
                 } else {
@@ -545,11 +548,8 @@ public class System_EmployeeManager extends javax.swing.JFrame {
                 this.txtSalary.setBackground(Color.yellow);
                 JOptionPane.showMessageDialog(this, "Định dang lương nhập vào bị sai!");
             }
-
         }
-
-
-    }//GEN-LAST:event_btnSaveActionPerformed
+    }
 
     private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
         // TODO add your handling code here:
@@ -565,6 +565,7 @@ public class System_EmployeeManager extends javax.swing.JFrame {
                         Employee employee = listEmployee.get(i);
                         if (employee.getId().equals(input)) {
                             this.index = i;
+                            this.tblEmployee.setRowSelectionInterval(index, index);
                             this.showTable();
                             this.showDetail();
                             this.updateRecord();
@@ -588,7 +589,7 @@ public class System_EmployeeManager extends javax.swing.JFrame {
         int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn thoát chương chình này không ?");
         System.out.println(confirm);
         if (confirm == JOptionPane.YES_OPTION) {
-            this.emi.writeFile(fileName);
+            XFile.writeFile(path, this.emi.getList());
             System.exit(0);
         } else if (confirm == JOptionPane.NO_OPTION) {
 
@@ -601,6 +602,7 @@ public class System_EmployeeManager extends javax.swing.JFrame {
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
         index = 0;
+        this.tblEmployee.setRowSelectionInterval(index, index);
         this.showDetail();
         this.updateRecord();
     }//GEN-LAST:event_btnBackActionPerformed
@@ -609,6 +611,7 @@ public class System_EmployeeManager extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (index > 0) {
             index--;
+            this.tblEmployee.setRowSelectionInterval(index, index);
             this.showDetail();
             this.updateRecord();
         }
@@ -620,6 +623,7 @@ public class System_EmployeeManager extends javax.swing.JFrame {
 
         if (index < listEmployee.size() - 1) {
             index++;
+            this.tblEmployee.setRowSelectionInterval(index, index);
             this.showDetail();
             this.updateRecord();
         }
@@ -630,6 +634,7 @@ public class System_EmployeeManager extends javax.swing.JFrame {
 
         List<Employee> listEmployee = this.emi.getList();
         index = listEmployee.size() - 1;
+        this.tblEmployee.setRowSelectionInterval(index, index);
         this.showDetail();
         this.updateRecord();
     }//GEN-LAST:event_btnStep1ActionPerformed
@@ -671,7 +676,7 @@ public class System_EmployeeManager extends javax.swing.JFrame {
             this.emi.delete(row);
             this.showTable();
             this.reSet();
-            this.emi.writeFile(fileName);
+            XFile.writeFile(path, this.emi.getList());
             this.updateRecord();
         } else if (confirm == JOptionPane.NO_OPTION) {
 
@@ -682,7 +687,9 @@ public class System_EmployeeManager extends javax.swing.JFrame {
 
     private void btnOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenActionPerformed
         // TODO add your handling code here:
-        this.emi.readFile(fileName);
+
+        this.emi.setList((List<Employee>) XFile.readFile(path));
+
         this.showTable();
         if (this.emi.getList().isEmpty() != true) {
             index = 0;
@@ -746,7 +753,6 @@ public class System_EmployeeManager extends javax.swing.JFrame {
         this.cbbAge.setSelectedItem(String.valueOf(employee.getAge()));
         this.txtEmail.setText(employee.getEmail());
         this.txtSalary.setText(employee.getSalary().toString());
-        this.tblEmployee.setRowSelectionInterval(index, index);
     }
 
     public void reSet() {
