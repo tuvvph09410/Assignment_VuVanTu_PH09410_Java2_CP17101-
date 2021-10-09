@@ -17,7 +17,7 @@ import XFile.XFile;
  *
  * @author vuvantu
  */
-public class System_EmployeeManager extends javax.swing.JFrame {
+public class System_EmployeeManager extends javax.swing.JFrame implements Runnable {
 
     private EmployeeManager_Interface emi;
     private int index;
@@ -32,28 +32,8 @@ public class System_EmployeeManager extends javax.swing.JFrame {
         this.reSet();
         this.emi = new EmployeeManager();
         this.showTable();
-        this.showTime();
-    }
 
-    public void showTime() {
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        SimpleDateFormat format = new SimpleDateFormat();
-                        Date date = new Date();
-                        format.applyPattern(" hh:mm aa ");
-                        String time = format.format(date);
-                        lbTime.setText(time);
-                        Thread.sleep(6000);
-                    } catch (InterruptedException e) {
-                        break;
-                    }
-                }
-            }
-
-        };
+        Thread thread = new Thread(this);
         thread.start();
     }
 
@@ -839,4 +819,23 @@ public class System_EmployeeManager extends javax.swing.JFrame {
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtSalary;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void run() {
+        while (true) {
+
+            SimpleDateFormat format = new SimpleDateFormat();
+            Date date = new Date();
+            format.applyPattern(" hh : mm aa ");
+            String time = format.format(date);
+            this.lbTime.setText(time);
+
+            try {
+                Thread.sleep(6000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                break;
+            }
+        }
+    }
 }
