@@ -446,6 +446,7 @@ public class System_EmployeeManager extends javax.swing.JFrame implements Runnab
     private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
         // TODO add your handling code here:
         this.reSet();
+        this.tblEmployee.clearSelection();
     }//GEN-LAST:event_btnNewActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
@@ -545,10 +546,13 @@ public class System_EmployeeManager extends javax.swing.JFrame implements Runnab
                         Employee employee = listEmployee.get(i);
                         if (employee.getId().equals(input)) {
                             this.index = i;
-                            this.tblEmployee.setRowSelectionInterval(index, index);
+                            System.out.println(index);
+
                             this.showTable();
                             this.showDetail();
                             this.updateRecord();
+                            this.tblEmployee.setRowSelectionInterval(index, index);
+
                             JOptionPane.showMessageDialog(this, "Tìm thành công nhân viên, Vui lòng kiểm tra trên form");
                         }
                     }

@@ -21,38 +21,38 @@ import java.util.List;
  * @author vuvantu
  */
 public class XFile {
-    
+
     public static void writeFile(String path, Object object) {
         try {
             FileOutputStream fos = new FileOutputStream(path);
             ObjectOutputStream objectOS = new ObjectOutputStream(fos);
-            
+
             objectOS.writeObject(object);
-            
+
             objectOS.close();
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
-            
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        
+
     }
-    
+
     public static Object readFile(String path) {
         try {
             FileInputStream fis = new FileInputStream(path);
             ObjectInputStream ObjectIS = new ObjectInputStream(fis);
-            
-           Object object=ObjectIS.readObject();
-            
+
+            Object object = ObjectIS.readObject();
+
             ObjectIS.close();
-            
+
             return object;
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
-        } 
-        
+        }
+
     }
 }
